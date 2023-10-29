@@ -42,9 +42,10 @@ class MyRobot(wpilib.TimedRobot):
         self.DriveTrain.teleopPeriodic()
         self.Arm.teleopPeriodic()
         if self.controller.getStartButton():
+            print('hit start button!!!!')
             self.Arm.shoulderEncoder.setPosition(0)
             self.Arm.extenderEncoder.setPosition(0)
-        if self.controller.getBackButton():
+        if self.controller.getBackButton(): # keyboard M
             # resets the yaw
             self.DriveTrain.gyroscope.reset()
 

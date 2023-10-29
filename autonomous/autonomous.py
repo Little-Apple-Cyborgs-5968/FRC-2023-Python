@@ -2,6 +2,7 @@ from robotpy_ext.autonomous import StatefulAutonomous, state, timed_state
 
 class Autonomous(StatefulAutonomous):
     MODE_NAME = "Auto Mode"
+    DEFAULT = True
 
     def initialize(self): 
         self.initial_called = None
