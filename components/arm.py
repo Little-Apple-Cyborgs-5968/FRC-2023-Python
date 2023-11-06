@@ -37,13 +37,14 @@ class Arm:
         # Intializes position to 0
         self.shoulderEncoder.setPosition(0)
         self.shoulderPosition = 0
+        self.shoulder_moving = 0
         self.extenderEncoder.setPosition(0)
         self.extenderPosition = 0
 
         # Sets PID values for teleoperated.
-        self.shoulderPIDController.setP(0.5)
+        self.shoulderPIDController.setP(1)
         self.shoulderPIDController.setI(0.0)
-        self.shoulderPIDController.setD(7)
+        self.shoulderPIDController.setD(.25)
         self.shoulderPIDController.setFF(0.0)
         self.extenderPIDController.setP(0.5)
         self.extenderPIDController.setI(0.0)
@@ -60,14 +61,19 @@ class Arm:
             self.intakeMotor.set(0)
 
         # Handles control on the shoulder motor.
+        shoulder_inc = 0
+        shoulder_pos = self.shoulderEncoder.getPosition()
         if self.controller.getYButton(): # keyboard V
-            self.shoulderMotor.set(0.5)    
-            self.shoulderPosition = self.shoulderEncoder.getPosition()
+            self.shoulderPosition = self.shoulderEncoder.getPosition() + 5
+            self.shoulder_moving = 1
         elif self.controller.getXButton(): # keyboard C
-            self.shoulderMotor.set(-0.5)
+            self.shoulderPosition = self.shoulderEncoder.getPosition() - 5
+            self.shoulder_moving = 1
+        elif self.shoulder_moving:
             self.shoulderPosition = self.shoulderEncoder.getPosition()
-        else:
-            self.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
+            self.shoulder_moving = 0
+
+        self.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
 
         # Handles control on the extender motor.
         if self.controller.getPOV() == 0: # keyboard 0
