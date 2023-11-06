@@ -1,5 +1,5 @@
 import rev
-# from rev import CANSparkMax has issues with the library for some reason
+from sim.sparksim import CANSparkMax
 from wpilib import SPI
 from wpilib.drive import MecanumDrive
 from navx import AHRS
@@ -11,10 +11,10 @@ class DriveTrain:
         self.BALANCE = False
 
         # Intializes motors for the drive basse.
-        self.frontRightMotor = rev.CANSparkMax(CAN.frontRightChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.rearRightMotor = rev.CANSparkMax(CAN.rearRightChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.frontLeftMotor = rev.CANSparkMax(CAN.frontLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
-        self.rearLeftMotor = rev.CANSparkMax(CAN.rearLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.frontRightMotor = CANSparkMax(CAN.frontRightChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.rearRightMotor = CANSparkMax(CAN.rearRightChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.frontLeftMotor = CANSparkMax(CAN.frontLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.rearLeftMotor = CANSparkMax(CAN.rearLeftChannel, rev.CANSparkMax.MotorType.kBrushless)
         self.frontRightMotor.restoreFactoryDefaults()
         self.rearRightMotor.restoreFactoryDefaults()
         self.frontLeftMotor.restoreFactoryDefaults()
@@ -53,9 +53,10 @@ class DriveTrain:
     def teleopPeriodic(self):
         # Handles the movement of the drive base.
         self.robotDrive.driveCartesian(
-            self.controller.getLeftY(),
+            -self.controller.getLeftY(),
             self.controller.getLeftX(),
-            0.5 * self.controller.getRightX()
+            0.5 * self.controller.getRightX(),
+            -self.gyroscope.getRotation2d(),
         )
 
         if self.controller.getLeftBumper():
