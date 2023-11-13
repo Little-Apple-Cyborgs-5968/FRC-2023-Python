@@ -1,13 +1,15 @@
-from rev import CANSparkMax
+from sim.sparksim import CANSparkMax
+import rev
+# from rev import CANSparkMax has issues with the library for some reason
 
 from robot_map import CAN
 
 class Arm:
     def __init__(self, controller):
         # Intializes motors for the arm.
-        self.shoulderMotor = CANSparkMax(CAN.shoulderChannel, CANSparkMax.MotorType.kBrushless)
-        self.extenderMotor = CANSparkMax(CAN.extenderChannel, CANSparkMax.MotorType.kBrushless)
-        self.intakeMotor = CANSparkMax(CAN.intakeChannel, CANSparkMax.MotorType.kBrushless)
+        self.shoulderMotor = CANSparkMax(CAN.shoulderChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.extenderMotor = CANSparkMax(CAN.extenderChannel, rev.CANSparkMax.MotorType.kBrushless)
+        self.intakeMotor = CANSparkMax(CAN.intakeChannel, rev.CANSparkMax.MotorType.kBrushless)
         self.shoulderMotor.restoreFactoryDefaults()
         self.extenderMotor.restoreFactoryDefaults()
         self.intakeMotor.restoreFactoryDefaults()
@@ -71,7 +73,7 @@ class Arm:
             self.shoulderPosition = self.shoulderEncoder.getPosition()
             self.shoulder_moving = 0
 
-        self.shoulderPIDController.setReference(self.shoulderPosition, CANSparkMax.ControlType.kPosition)
+        self.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
 
         # Handles control on the extender motor.
         if self.controller.getPOV() == 0: # keyboard 0
@@ -81,7 +83,7 @@ class Arm:
             self.extenderMotor.set(-0.25)
             self.extenderPosition = self.extenderEncoder.getPosition()
         else:
-            self.extenderPIDController.setReference(self.extenderPosition, CANSparkMax.ControlType.kPosition)
+            self.extenderPIDController.setReference(self.extenderPosition, rev.CANSparkMax.ControlType.kPosition)
 
         # print(f"Shoulder : {self.shoulderEncoder.getPosition()}")
         # print(f"Extender : {self.extenderEncoder.getPosition()}")
@@ -109,5 +111,5 @@ class Arm:
     
     def autonomousPeriodic(self):
         # Move to position
-        self.shoulderPIDController.setReference(self.shoulderPosition, CANSparkMax.ControlType.kPosition)
-        self.extenderPIDController.setReference(self.extenderPosition, CANSparkMax.ControlType.kPosition)
+        self.shoulderPIDController.setReference(self.shoulderPosition, rev.CANSparkMax.ControlType.kPosition)
+        self.extenderPIDController.setReference(self.extenderPosition, rev.CANSparkMax.ControlType.kPosition)

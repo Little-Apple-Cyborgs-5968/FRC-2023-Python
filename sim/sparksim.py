@@ -1,7 +1,7 @@
+import rev
 import wpilib
 from wpilib import simulation
 from wpimath.controller import PIDController
-from rev import CANSparkMax
 
 if wpilib.RobotBase.isSimulation():
 
