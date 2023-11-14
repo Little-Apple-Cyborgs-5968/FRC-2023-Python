@@ -55,7 +55,8 @@ class DriveTrain:
         self.robotDrive.driveCartesian(
             self.controller.getLeftY(),
             self.controller.getLeftX(),
-            0.5 * self.controller.getRightX()
+            0.5 * self.controller.getRightX(),
+            self.gyroscope.getRottion2d()
         )
 
         if self.controller.getLeftBumper():
